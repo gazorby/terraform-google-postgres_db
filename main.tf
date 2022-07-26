@@ -71,6 +71,7 @@ module "google_postgres_db" {
   maintenance_window_day          = var.maintenance_window.day_utc
   maintenance_window_hour         = var.maintenance_window.hour_utc
   maintenance_window_update_track = var.maintenance_window.update_track
+  insights_config                 = var.insights_config
   ip_configuration = {
     authorized_networks = local.master_authorized_networks
     ipv4_enabled        = var.public_access_master_instance
@@ -107,7 +108,6 @@ module "google_postgres_db" {
       user_labels     = var.labels_read_replica
     }
   ]
-  insights_config = var.insights_config
 }
 
 resource "google_project_iam_member" "cloudsql_proxy_user" {
