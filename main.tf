@@ -107,6 +107,7 @@ module "google_postgres_db" {
       user_labels     = var.labels_read_replica
     }
   ]
+  insights_config = var.insights_config
 }
 
 resource "google_project_iam_member" "cloudsql_proxy_user" {
