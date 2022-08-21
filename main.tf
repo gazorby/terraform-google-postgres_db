@@ -43,7 +43,7 @@ resource "google_project_service" "cloudsql_api" {
 
 module "google_postgres_db" {
   source                          = "GoogleCloudPlatform/sql-db/google//modules/postgresql"
-  version                         = "5.0.0"
+  version                         = "9.0.0"
   depends_on                      = [google_project_service.compute_api, google_project_service.cloudsql_api]
   deletion_protection             = var.deletion_protection_master_instance
   project_id                      = data.google_client_config.google_client.project
@@ -85,6 +85,9 @@ module "google_postgres_db" {
     point_in_time_recovery_enabled = var.pit_recovery_enabled
     start_time                     = "00:05"
     location                       = local.backup_location
+    transaction_log_retention_days = null
+    retained_backups               = null
+    retention_unit                 = null
   }
 
   # read replica settings
@@ -112,6 +115,7 @@ module "google_postgres_db" {
 
 resource "google_project_iam_member" "cloudsql_proxy_user" {
   for_each   = toset(var.sql_proxy_user_groups)
+  project    = data.google_client_config.google_client.project
   role       = "roles/cloudsql.client" # see https://cloud.google.com/sql/docs/postgres/quickstart-proxy-test#before-you-begin
   member     = "group:${each.value}"
   depends_on = [google_project_service.compute_api, google_project_service.cloudsql_api]
