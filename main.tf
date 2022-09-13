@@ -46,7 +46,7 @@ module "google_postgres_db" {
   version                         = "9.0.0"
   depends_on                      = [google_project_service.compute_api, google_project_service.cloudsql_api]
   deletion_protection             = var.deletion_protection_master_instance
-  project_id                      = data.google_client_config.google_client.project
+  project_id                      = var.project_id
   name                            = local.master_instance_name
   db_name                         = var.default_db_name
   db_collation                    = var.default_db_collation
