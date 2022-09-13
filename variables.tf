@@ -16,6 +16,11 @@ variable "private_network" {
   type        = string
 }
 
+variable "project_id" {
+  description = "The project id where the instance is created"
+  type        = string
+}
+
 # ----------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # ----------------------------------------------------------------------------------------------------------------------
