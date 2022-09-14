@@ -33,11 +33,13 @@ data "google_client_config" "google_client" {}
 
 resource "google_project_service" "compute_api" {
   service            = "compute.googleapis.com"
+  project            = var.project_id == null ? data.google_client_config.google_client.project : var.project_id
   disable_on_destroy = false
 }
 
 resource "google_project_service" "cloudsql_api" {
   service            = "sqladmin.googleapis.com"
+  project            = var.project_id == null ? data.google_client_config.google_client.project : var.project_id
   disable_on_destroy = false
 }
 
@@ -46,7 +48,7 @@ module "google_postgres_db" {
   version                         = "9.0.0"
   depends_on                      = [google_project_service.compute_api, google_project_service.cloudsql_api]
   deletion_protection             = var.deletion_protection_master_instance
-  project_id                      = var.project_id
+  project_id                      = var.project_id == null ? data.google_client_config.google_client.project : var.project_id
   name                            = local.master_instance_name
   db_name                         = var.default_db_name
   db_collation                    = var.default_db_collation
@@ -115,7 +117,7 @@ module "google_postgres_db" {
 
 resource "google_project_iam_member" "cloudsql_proxy_user" {
   for_each   = toset(var.sql_proxy_user_groups)
-  project    = data.google_client_config.google_client.project
+  project    = var.project_id == null ? data.google_client_config.google_client.project : var.project_id
   role       = "roles/cloudsql.client" # see https://cloud.google.com/sql/docs/postgres/quickstart-proxy-test#before-you-begin
   member     = "group:${each.value}"
   depends_on = [google_project_service.compute_api, google_project_service.cloudsql_api]

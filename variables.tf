@@ -16,14 +16,16 @@ variable "private_network" {
   type        = string
 }
 
-variable "project_id" {
-  description = "The project id where the instance is created"
-  type        = string
-}
 
 # ----------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # ----------------------------------------------------------------------------------------------------------------------
+
+variable "project_id" {
+  description = "The project id where the instance is created"
+  type        = string
+  default     = null
+}
 
 variable "root_user_name" {
   description = "The name of the root user."
